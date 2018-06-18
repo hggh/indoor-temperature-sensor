@@ -53,10 +53,10 @@ void send_information() {
 	if (battery_status % 4) {
 		battery = read_battery_volatage();
 		dtostrf(battery, 3, 2, batteryStr);
-		sprintf(buffer, "%d;%s;%s;%s;%s", humidityStr, pressureStr, tempStr, batteryStr);
+		sprintf(buffer, "%d;%s;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr, batteryStr);
 	}
 	else {
-		sprintf(buffer, "%d;%s;%s;%s", humidityStr, pressureStr, tempStr);
+		sprintf(buffer, "%d;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr);
 	}
 
 	radio.sendWithRetry(GATEWAYID, buffer, strlen(buffer), 5);
@@ -89,5 +89,7 @@ void loop() {
 	Sleepy::loseSomeTime(15);
 	send_information();
 
-	Sleepy::loseSomeTime(1000 * 60 * 30);
+	for (uint8_t i = 1; i <= SLEEP_TIME_MIN; i++) {
+		Sleepy::loseSomeTime(60000);
+	}
 }
