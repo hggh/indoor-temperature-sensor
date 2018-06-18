@@ -50,7 +50,7 @@ void send_information() {
 	dtostrf(pressure, 3, 2, pressureStr);
 	dtostrf(temp, 3, 2, tempStr);
 
-	if (battery_status % 4) {
+	if (battery_status % 4 == 0) {
 		battery = read_battery_volatage();
 		dtostrf(battery, 3, 2, batteryStr);
 		sprintf(buffer, "%d;%s;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr, batteryStr);
