@@ -59,7 +59,7 @@ void send_information() {
 		sprintf(buffer, "%d;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr);
 	}
 
-	radio.sendWithRetry(GATEWAYID, buffer, strlen(buffer), 5);
+	radio.sendWithRetry(GATEWAYID, buffer, strlen(buffer), 5, 10);
 	radio.sleep();
 
 	battery_status++;
