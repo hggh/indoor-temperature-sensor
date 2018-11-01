@@ -82,14 +82,18 @@ void setup() {
 	radio.initialize(FREQUENCY, NODEID, NETWORKID);
 	radio.encrypt(ENCRYPTKEY);
 	radio.sleep();
+
+	bme.setMode(MODE_FORCED);
+	Sleepy::loseSomeTime(30);
+	send_information();
 }
 
 void loop() {
-	bme.setMode(MODE_FORCED);
-	Sleepy::loseSomeTime(15);
-	send_information();
-
 	for (uint8_t i = 1; i <= SLEEP_TIME_MIN; i++) {
+		if (i == SLEEP_TIME_MIN) {
+			bme.setMode(MODE_FORCED);
+		}
 		Sleepy::loseSomeTime(60000);
 	}
+	send_information();
 }
