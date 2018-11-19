@@ -8,12 +8,12 @@ union() {
 		}
 	}
 	difference() {
-		cube([116, 5, 66]);
+		cube([116, 6, 66]);
 		translate([2, 0, 2]) {
-			cube([112, 3, 62]);
+			cube([112, 4, 62]);
 		}
 		translate([]) {
-			cube([2, 3, 62]);
+			cube([2, 4, 64]);
 		}
 	}
 	translate([-20, 5, 30]) {
