@@ -16,7 +16,7 @@ low power indoor bme280 sensor node
 
 ## solar powered
 
-https://raw.githubusercontent.com/hggh/indoor-atmel-328-bme280/master/pics/solar-case.jpg
+![solar-case](https://raw.githubusercontent.com/hggh/indoor-atmel-328-bme280/master/pics/solar-case.jpg)
 
 
 ## PCB front/back
