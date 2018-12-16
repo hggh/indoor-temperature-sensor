@@ -5,6 +5,7 @@ low power indoor bme280 sensor node
   * 328P on 1Mhz, no BOD
   * RFM69
   * BME280
+  * 5.5V 1.5F SuperCap (solar version)
   * CR2032 (later a solar panel with a supercap)
   
 
@@ -12,6 +13,10 @@ low power indoor bme280 sensor node
   - git clone git@github.com:hggh/indoor-atmel-328-bme280.git
   - cp src/config.h.example src/config.h
   - platformio run --target program  
+
+## solar powered
+
+https://raw.githubusercontent.com/hggh/indoor-atmel-328-bme280/master/pics/solar-case.jpg
 
 
 ## PCB front/back
