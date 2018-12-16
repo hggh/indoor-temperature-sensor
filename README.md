@@ -6,6 +6,7 @@ low power indoor bme280 sensor node
   * RFM69
   * BME280
   * 5.5V 1.5F SuperCap (solar version)
+  * 2x 3V 110mA 60mmx55mm solar panel (solar version)
   * CR2032 (later a solar panel with a supercap)
   
 
