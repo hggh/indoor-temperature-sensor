@@ -4,34 +4,17 @@
 #include <JeeLib.h>
 #include <SparkFunBME280.h>
 #include <RFM69.h>
+#include <Voltage.h>
 
 #include "config.h"
 
 RFM69 radio;
-byte ADCSRA_status;
 BME280 bme;
-const float InternalReferenceVoltage = 1.1;
+Voltage voltage;
 short battery_status = 0;
 
 ISR(WDT_vect) {
 	Sleepy::watchdogEvent();
-}
-
-float read_battery_volatage() {
-	power_adc_enable();
-	ADCSRA = ADCSRA_status;
-	ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2);  // Prescaler of 128
-	ADMUX = bit (REFS0) | bit (MUX3) | bit (MUX2) | bit (MUX1);
-
-	delay(10);
-	bitSet (ADCSRA, ADSC);
-	while (bit_is_set(ADCSRA, ADSC)) {
-	}
-	float battery_voltage = InternalReferenceVoltage / float (ADC + 0.5) * 1024.0;
-
-	ADCSRA &= ~(1 << 7);
-	power_adc_disable();
-	return battery_voltage;
 }
 
 void send_information() {
@@ -51,7 +34,7 @@ void send_information() {
 	dtostrf(temp, 3, 2, tempStr);
 
 	if (battery_status % 4 == 0) {
-		battery = read_battery_volatage();
+		battery = (double)voltage.read();
 		dtostrf(battery, 3, 2, batteryStr);
 		sprintf(buffer, "%d;%s;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr, batteryStr);
 	}
@@ -66,9 +49,7 @@ void send_information() {
 }
 
 void setup() {
-	ADCSRA_status = ADCSRA;
-	ADCSRA &= ~(1 << 7);
-	power_adc_disable();
+	voltage.init();
 
 	power_usart0_disable();
 	power_timer1_disable();
