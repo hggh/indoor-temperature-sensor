@@ -1,80 +1,148 @@
 #include <Arduino.h>
-#include <Wire.h>
-#include <avr/power.h>
-#include <JeeLib.h>
-#include <SparkFunBME280.h>
-#include <RFM69.h>
-#include <Voltage.h>
+#include <WiFi.h>
+#include "driver/adc.h"
+
+#define uS_TO_S_FACTOR 1000000
+#define ENABLE_GxEPD2_GFX 0
+
+#include <GxEPD2_BW.h>
+#include <GxEPD2_3C.h>
+
+#include <PubSubClient.h>
+
+#include "DHTesp.h"
+DHTesp dht;
+int dhtPin = 22;
+
+#include <Fonts/FreeSans18pt7b.h>
+#include <Fonts/FreeSansBold24pt7b.h>
 
 #include "config.h"
 
-RFM69 radio;
-BME280 bme;
-Voltage voltage;
-short battery_status = 0;
+GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(SS, 17, 16, 4));
+RTC_DATA_ATTR unsigned int bootCount = 0;
+WiFiClient espClient;
+PubSubClient client(espClient);
 
-ISR(WDT_vect) {
-	Sleepy::watchdogEvent();
+void mqtt_check_connection() {
+  if (!client.connected()) {
+    client.connect(HOSTNAME, MQTT_USERNAME, MQTT_PASSWORD);
+  }
 }
 
-void send_information() {
-	double humidity = bme.readFloatHumidity();
-	double pressure = bme.readFloatPressure();
-	double temp = bme.readTempC();
-	double battery;
-	char buffer[32] = "";
-
-	char humidityStr[10];
-	char pressureStr[10];
-	char tempStr[10];
-	char batteryStr[10];
-
-	dtostrf(humidity, 3, 2, humidityStr);
-	dtostrf(pressure, 3, 2, pressureStr);
-	dtostrf(temp, 3, 2, tempStr);
-
-	if (battery_status % 4 == 0) {
-		battery = (double)voltage.read();
-		dtostrf(battery, 3, 2, batteryStr);
-		sprintf(buffer, "%d;%s;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr, batteryStr);
-	}
-	else {
-		sprintf(buffer, "%d;%s;%s;%s", NODEID, humidityStr, pressureStr, tempStr);
-	}
-
-	radio.sendWithRetry(GATEWAYID, buffer, strlen(buffer), 5, 50);
-	radio.sleep();
-
-	battery_status++;
+void wifi_got_ip_event(WiFiEvent_t event, WiFiEventInfo_t info) {
+  mqtt_check_connection();
 }
 
 void setup() {
-	voltage.init();
+#ifdef DEBUG
+  Serial.begin(115200);
+  Serial.println("Booting...");
+#endif
 
-	power_usart0_disable();
-	power_timer1_disable();
-	power_timer2_disable();
+  adc_power_off();
+  btStop();
 
-	Wire.begin();
-	bme.setI2CAddress(0x76);
-	bme.beginI2C();
-	bme.setMode(MODE_SLEEP);
+  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
+  WiFi.onEvent(wifi_got_ip_event, WiFiEvent_t::SYSTEM_EVENT_STA_GOT_IP);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SECRET_SSID, SECRET_PASS);
+  WiFi.setHostname(HOSTNAME);
 
-	radio.initialize(FREQUENCY, NODEID, NETWORKID);
-	radio.encrypt(ENCRYPTKEY);
-	radio.sleep();
+  client.setServer(MQTT_SERVER, 1883);
 
-	bme.setMode(MODE_FORCED);
-	Sleepy::loseSomeTime(30);
-	send_information();
+  dht.setup(dhtPin, DHTesp::DHT22);
+
+  display.init(0, false);
+  display.setRotation(2);
+  display.setTextColor(GxEPD_BLACK);
+  display.setFont(&FreeSans18pt7b);
+
+  display.fillScreen(GxEPD_WHITE);
+
+  display.fillCircle(130, 25, 5, GxEPD_BLACK);
+  display.fillCircle(130, 25, 2, GxEPD_WHITE);
+  display.setCursor(135, 50);
+  display.print("C");
+
+  display.setCursor(130, 120);
+  display.print("%");
+
+  display.setCursor(130, 185);
+  display.print("hPa");
+
+  if (bootCount == 0) {
+    display.display();
+  }
+  else {
+    display.display(true);
+  }
+  ++bootCount;
+  display.hibernate();
 }
 
 void loop() {
-	for (uint8_t i = 1; i <= SLEEP_TIME_MIN; i++) {
-		if (i == SLEEP_TIME_MIN) {
-			bme.setMode(MODE_FORCED);
-		}
-		Sleepy::loseSomeTime(60000);
-	}
-	send_information();
+  TempAndHumidity newValues = dht.getTempAndHumidity();
+  
+  float h = newValues.humidity;
+  float t = newValues.temperature;
+  float p = random(900, 1111);
+  if (dht.getStatus() != 0) {
+    Serial.println("error dht");
+    delay(200);
+    return;
+  }
+
+  display.setFont(&FreeSansBold24pt7b);
+  display.setCursor(5, 50);
+  display.print(t, 1);
+
+  display.setCursor(5, 120);
+  display.print(h, 1);
+
+  display.setCursor(5, 185);
+  if (p < 1000) {
+    display.print(" ");
+  }
+  display.print(int(p));
+
+  display.display(true);
+  display.hibernate();
+
+  // TODO Timeout for wifi and mqtt
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(10);
+    Serial.print(".");
+  }
+  mqtt_check_connection();
+
+  char value_buffer[10] = "";
+  char buffer[60] = "";
+  dtostrf(t, 3, 2, value_buffer);
+  sprintf(buffer, "/temperature/%s/state", HOSTNAME);
+  client.publish(buffer, value_buffer);
+
+  dtostrf(h, 3, 2, value_buffer);
+  sprintf(buffer, "/humidity/%s/state", HOSTNAME);
+  client.publish(buffer, value_buffer);
+
+  dtostrf(p, 3, 2, value_buffer);
+  sprintf(buffer, "/pressure/%s/state", HOSTNAME);
+  client.publish(buffer, value_buffer);
+
+  sprintf(value_buffer, "%i", bootCount);
+  sprintf(buffer, "/bootcount/%s/state", HOSTNAME);
+  client.publish(buffer, value_buffer);
+
+  espClient.flush();
+  delay(1);
+  client.disconnect();
+  delay(1);
+  espClient.flush();
+  delay(1);
+  WiFi.disconnect(true);
+
+  esp_sleep_enable_timer_wakeup(30 * uS_TO_S_FACTOR);
+  esp_deep_sleep_start();
+
 }

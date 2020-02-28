@@ -1,8 +1,0 @@
-#define NODEID        2
-#define NETWORKID     1
-#define GATEWAYID     1
-#define FREQUENCY     RF69_433MHZ
-#define ENCRYPTKEY    "1234567890123456"
-#define ACK_TIME      15
-
-#define SLEEP_TIME_MIN 30

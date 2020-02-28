@@ -1,25 +1,7 @@
-# indoor-atmel-328-bme280
-low power indoor bme280 sensor node
+# indoor BME280 sensor with ePaper display
 
-
-  * 328P on 1Mhz, no BOD
-  * RFM69
+  * ESP32-WROOM
   * BME280
-  * 5.5V 1.5F SuperCap (solar version)
-  * 2x 3V 110mA 60mmx55mm solar panel (solar version)
-  * CR2032 (later a solar panel with a supercap)
+  * 1.54" w/b epaper
   
 
-## compile
-  - git clone git@github.com:hggh/indoor-atmel-328-bme280.git
-  - cp src/config.h.example src/config.h
-  - platformio run --target program  
-
-## solar powered
-
-![solar-case](https://raw.githubusercontent.com/hggh/indoor-atmel-328-bme280/master/pics/solar-case.jpg)
-
-
-## PCB front/back
-
-![PCB](https://raw.githubusercontent.com/hggh/indoor-atmel-328-bme280/master/pics/pcb.jpg)
