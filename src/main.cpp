@@ -23,6 +23,7 @@ GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(SS, 17, 16, 4));
 RTC_DATA_ATTR unsigned int bootCount = 0;
 WiFiClient espClient;
 PubSubClient client(espClient);
+String hostname = String(HOSTNAME);
 
 void mqtt_check_connection() {
   if (!client.connected()) {
@@ -116,23 +117,10 @@ void loop() {
   }
   mqtt_check_connection();
 
-  char value_buffer[10] = "";
-  char buffer[60] = "";
-  dtostrf(t, 3, 2, value_buffer);
-  sprintf(buffer, "/temperature/%s/state", HOSTNAME);
-  client.publish(buffer, value_buffer);
-
-  dtostrf(h, 3, 2, value_buffer);
-  sprintf(buffer, "/humidity/%s/state", HOSTNAME);
-  client.publish(buffer, value_buffer);
-
-  dtostrf(p, 3, 2, value_buffer);
-  sprintf(buffer, "/pressure/%s/state", HOSTNAME);
-  client.publish(buffer, value_buffer);
-
-  sprintf(value_buffer, "%i", bootCount);
-  sprintf(buffer, "/bootcount/%s/state", HOSTNAME);
-  client.publish(buffer, value_buffer);
+  client.publish(String("/temperature/" + hostname + "/state").c_str(), String(t, 2).c_str());
+  client.publish(String("/humidity/" + hostname + "/state").c_str(), String(h, 2).c_str());
+  client.publish(String("/pressure/" + hostname + "/state").c_str(), String(p, 2).c_str());
+  client.publish(String("/bootcount/" + hostname + "/state").c_str(), String(bootCount).c_str());
 
   espClient.flush();
   delay(1);
