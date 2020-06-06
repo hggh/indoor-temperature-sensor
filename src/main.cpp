@@ -44,9 +44,11 @@
  */
 GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(5, 17, 16, 4));
 RTC_DATA_ATTR unsigned int bootCount = 0;
+static RTC_DATA_ATTR struct timeval sleep_enter_time;
 WiFiClient espClient;
 PubSubClient client(espClient);
 String hostname = String(HOSTNAME);
+const unsigned int sleep_time_min = 10;
 const short pin_touch_pad = T9;
 const short pin_enable_voltage_divider = 19;
 const short pin_battery_adc = 35;
@@ -54,12 +56,16 @@ const float volt_r1 = 10000.0;
 const float volt_r2 = 10000.0;
 const float voltage = 3.3;
 Adafruit_BME280 bme;
+uint64_t sleep_time;
+#define WAKEUP_STATUS_TIMER 0
+#define WAKEUP_STATUS_TOUCHPAD 1
+uint8_t wakeup_status = WAKEUP_STATUS_TIMER;
 
-void print_wakeup_reason(){
+bool wakeup_by_touch() {
   esp_sleep_wakeup_cause_t wakeup_reason;
-
   wakeup_reason = esp_sleep_get_wakeup_cause();
 
+#ifdef DEBUG
   switch(wakeup_reason)
   {
     case ESP_SLEEP_WAKEUP_EXT0 : Serial.println("Wakeup caused by external signal using RTC_IO"); break;
@@ -69,6 +75,12 @@ void print_wakeup_reason(){
     case ESP_SLEEP_WAKEUP_ULP : Serial.println("Wakeup caused by ULP program"); break;
     default : Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason); break;
   }
+#endif
+
+  if (wakeup_reason == ESP_SLEEP_WAKEUP_TOUCHPAD) {
+    return true;
+  }
+  return false;
 }
 
 void mqtt_check_connection() {
@@ -93,6 +105,9 @@ void touch_interrupt() {
 }
 
 void setup() {
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  unsigned int actual_sleep_time_s = now.tv_sec - sleep_enter_time.tv_sec;
 #ifdef DEBUG
   Serial.begin(115200);
   Serial.println("Booting count: " + String(bootCount));
@@ -123,6 +138,17 @@ void setup() {
     Serial.println(bme.sensorID(),16);
   }
 #endif
+
+  // if wakeup was via touch, we check the sleep time and calc the new sleep time
+  // so our home automation receives the data in the same interval
+  if (wakeup_by_touch() == true) {
+    wakeup_status = WAKEUP_STATUS_TOUCHPAD;
+    sleep_time = ((sleep_time_min * 60) - actual_sleep_time_s) * uS_TO_S_FACTOR;
+  }
+  else {
+    wakeup_status = WAKEUP_STATUS_TIMER;
+    sleep_time = sleep_time_min * 60 * uS_TO_S_FACTOR;
+  }
 
   display.init(0, false);
   display.setRotation(2);
@@ -157,8 +183,6 @@ void setup() {
   ++bootCount;
   display.hibernate();
 
-print_wakeup_reason();
-
   touchAttachInterrupt(pin_touch_pad, touch_interrupt, 30);
 }
 
@@ -185,13 +209,15 @@ void loop() {
   //float battery_voltage = get_battery_voltage();
   float battery_voltage = 3.3;
 
-  client.publish(String("/temperature/" + hostname + "/state").c_str(), String(t, 2).c_str());
-  client.publish(String("/humidity/" + hostname + "/state").c_str(), String(h, 2).c_str());
-  client.publish(String("/pressure/" + hostname + "/state").c_str(), String(p, 2).c_str());
-  client.publish(String("/batteryvoltage/" + hostname + "/state").c_str(), String(battery_voltage).c_str());
-  client.publish(String("/bootcount/" + hostname + "/state").c_str(), String(bootCount).c_str());
+  if (wakeup_status == WAKEUP_STATUS_TIMER) {
+    client.publish(String("/temperature/" + hostname + "/state").c_str(), String(t, 2).c_str());
+    client.publish(String("/humidity/" + hostname + "/state").c_str(), String(h, 2).c_str());
+    client.publish(String("/pressure/" + hostname + "/state").c_str(), String(p, 2).c_str());
+    client.publish(String("/batteryvoltage/" + hostname + "/state").c_str(), String(battery_voltage).c_str());
+    client.publish(String("/bootcount/" + hostname + "/state").c_str(), String(bootCount).c_str());
 
-  espClient.flush();
+    espClient.flush();
+  }
 
 #ifdef DEBUG
   display.setCursor(5, 80);
@@ -223,7 +249,11 @@ void loop() {
 
   esp_wifi_stop();
   adc_power_off();
-  esp_sleep_enable_timer_wakeup(9 * 60  * uS_TO_S_FACTOR);
+  esp_sleep_enable_timer_wakeup(sleep_time);
   esp_sleep_enable_touchpad_wakeup();
+  if (wakeup_status == WAKEUP_STATUS_TIMER) {
+    // only set current time if wakeup was called by periodic timer
+    gettimeofday(&sleep_enter_time, NULL);
+  }
   esp_deep_sleep_start();
 }
