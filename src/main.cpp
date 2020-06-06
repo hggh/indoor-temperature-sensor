@@ -2,6 +2,8 @@
 #include <WiFi.h>
 #include "driver/adc.h"
 #include <esp_wifi.h>
+#include <esp_bt.h>
+#include <esp_bt_main.h>
 
 #define uS_TO_S_FACTOR 1000000
 #define ENABLE_GxEPD2_GFX 0
@@ -75,10 +77,6 @@ void mqtt_check_connection() {
   }
 }
 
-void wifi_got_ip_event(WiFiEvent_t event, WiFiEventInfo_t info) {
-  mqtt_check_connection();
-}
-
 float get_battery_voltage() {
   digitalWrite(pin_enable_voltage_divider, HIGH);
   float val = 0.0;
@@ -97,10 +95,11 @@ void touch_interrupt() {
 void setup() {
 #ifdef DEBUG
   Serial.begin(115200);
-  Serial.println("Booting...");
+  Serial.println("Booting count: " + String(bootCount));
 #endif
+  esp_bluedroid_disable();
+  esp_bt_controller_disable();
 
-  btStop();
   adc_power_on();
   esp_wifi_start();
 
@@ -108,9 +107,9 @@ void setup() {
   pinMode(pin_enable_voltage_divider, OUTPUT);
   digitalWrite(pin_enable_voltage_divider, LOW);
 
-  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
-  WiFi.onEvent(wifi_got_ip_event, WiFiEvent_t::SYSTEM_EVENT_STA_GOT_IP);
   WiFi.mode(WIFI_STA);
+  WiFi.persistent(false);
+  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
   WiFi.begin(SECRET_SSID, SECRET_PASS);
   WiFi.setHostname(HOSTNAME);
 
@@ -180,6 +179,7 @@ void loop() {
     delay(10);
     Serial.print(".");
   }
+  Serial.println("");
   mqtt_check_connection();
 
   //float battery_voltage = get_battery_voltage();
@@ -191,9 +191,7 @@ void loop() {
   client.publish(String("/batteryvoltage/" + hostname + "/state").c_str(), String(battery_voltage).c_str());
   client.publish(String("/bootcount/" + hostname + "/state").c_str(), String(bootCount).c_str());
 
-  delay(1);
   espClient.flush();
-  delay(1);
 
 #ifdef DEBUG
   display.setCursor(5, 80);
@@ -217,16 +215,14 @@ void loop() {
   display.display(true);
   display.hibernate();
 
-Serial.print("Volt: ");
-Serial.println(battery_voltage);
-
   client.disconnect();
   delay(1);
   espClient.flush();
   delay(1);
-  WiFi.disconnect(true);
+  WiFi.disconnect();
 
   esp_wifi_stop();
+  adc_power_off();
   esp_sleep_enable_timer_wakeup(9 * 60  * uS_TO_S_FACTOR);
   esp_sleep_enable_touchpad_wakeup();
   esp_deep_sleep_start();
