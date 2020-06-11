@@ -243,8 +243,6 @@ void loop() {
 
   client.disconnect();
   delay(1);
-  espClient.flush();
-  delay(1);
   WiFi.disconnect();
 
   esp_wifi_stop();
