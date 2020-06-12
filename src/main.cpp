@@ -23,6 +23,9 @@
 #include <Fonts/FreeSansBold24pt7b.h>
 
 #include "config.h"
+#include "battery_symbols.h"
+#include <TP4056.h>
+#include <VoltageDivider.h>
 
 /*
  *  DIN  = GPIO 23
@@ -38,30 +41,39 @@
  *
  *  Touch Sensor
  *  T9  = GPIO 32 aka 33?!?(wrong label on breakout?)
+ *
+ *  TP4056 CHRG  = GPIO36 / SENSOR_VP
+ *  TP4056 STDBY = GPIO39 / SENSOR_VN
+ *  TP4056 USB   = GPIO34
  *  
  *  Voltage Input  = GPIO 35 / ADC7
  *  ENABLE Voltage = GPIO 19 
  */
 GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(5, 17, 16, 4));
 RTC_DATA_ATTR unsigned int bootCount = 0;
-static RTC_DATA_ATTR struct timeval sleep_enter_time;
+RTC_DATA_ATTR unsigned int sleep_time_remaining = 0;
+RTC_DATA_ATTR time_t sleep_time_start;
 WiFiClient espClient;
 PubSubClient client(espClient);
 String hostname = String(HOSTNAME);
-const unsigned int sleep_time_min = 10;
+TP4056 tp4056;
+VoltageDivider voltage_divider;
 const short pin_touch_pad = T9;
 const short pin_enable_voltage_divider = 19;
 const short pin_battery_adc = 35;
 const float volt_r1 = 10000.0;
 const float volt_r2 = 10000.0;
 const float voltage = 3.3;
+const short pin_tp4056_chrg = 36;
+const short pin_tp4056_stdby = 39;
+const short pin_tp4056_usb = 34;
+const float battery_low = 2.7;
+// 2^36 + 2^34 + 2^39
+#define WAKEUP_EXT1_GPIO_MASK 0x9400000000
 Adafruit_BME280 bme;
-uint64_t sleep_time;
-#define WAKEUP_STATUS_TIMER 0
-#define WAKEUP_STATUS_TOUCHPAD 1
-uint8_t wakeup_status = WAKEUP_STATUS_TIMER;
+short status_wakeup_via_timer = 0;
 
-bool wakeup_by_touch() {
+int get_wakeup_reason() {
   esp_sleep_wakeup_cause_t wakeup_reason;
   wakeup_reason = esp_sleep_get_wakeup_cause();
 
@@ -77,10 +89,7 @@ bool wakeup_by_touch() {
   }
 #endif
 
-  if (wakeup_reason == ESP_SLEEP_WAKEUP_TOUCHPAD) {
-    return true;
-  }
-  return false;
+  return wakeup_reason;
 }
 
 void mqtt_check_connection() {
@@ -89,38 +98,26 @@ void mqtt_check_connection() {
   }
 }
 
-float get_battery_voltage() {
-  digitalWrite(pin_enable_voltage_divider, HIGH);
-  float val = 0.0;
-
-  val = analogRead(pin_battery_adc);
-  float vin = ((val * voltage) / 4095.0) / (volt_r2 / ( volt_r1 + volt_r2));
-
-  digitalWrite(pin_enable_voltage_divider, LOW);
-
-  return vin;
-}
-
 void touch_interrupt() {
 }
 
 void setup() {
-  struct timeval now;
-  gettimeofday(&now, NULL);
-  unsigned int actual_sleep_time_s = now.tv_sec - sleep_enter_time.tv_sec;
 #ifdef DEBUG
   Serial.begin(115200);
   Serial.println("Booting count: " + String(bootCount));
 #endif
+  time_t startup_time = time(0);
   esp_bluedroid_disable();
   esp_bt_controller_disable();
 
   adc_power_on();
   esp_wifi_start();
 
-  pinMode(pin_battery_adc, INPUT);
-  pinMode(pin_enable_voltage_divider, OUTPUT);
-  digitalWrite(pin_enable_voltage_divider, LOW);
+  voltage_divider.init(pin_enable_voltage_divider, pin_battery_adc);
+  voltage_divider.set_r1(volt_r1);
+  voltage_divider.set_r2(volt_r1);
+
+  tp4056.init(pin_tp4056_usb, pin_tp4056_chrg, pin_tp4056_stdby);
 
   WiFi.mode(WIFI_STA);
   WiFi.persistent(false);
@@ -139,15 +136,28 @@ void setup() {
   }
 #endif
 
-  // if wakeup was via touch, we check the sleep time and calc the new sleep time
-  // so our home automation receives the data in the same interval
-  if (wakeup_by_touch() == true) {
-    wakeup_status = WAKEUP_STATUS_TOUCHPAD;
-    sleep_time = ((sleep_time_min * 60) - actual_sleep_time_s) * uS_TO_S_FACTOR;
+  // if wakeup was by timer or after reset set time to sleep and send data via mqtt
+  if (get_wakeup_reason() == ESP_SLEEP_WAKEUP_TIMER || get_wakeup_reason() == 0) {
+    status_wakeup_via_timer = 1;
+    sleep_time_remaining = sleep_time_min * 60 * uS_TO_S_FACTOR;
+#ifdef DEBUG
+    Serial.println("Wakeup via timer or reset");
+    Serial.print("sleep_time_remaining: ");
+    Serial.println(sleep_time_remaining);
+#endif
   }
   else {
-    wakeup_status = WAKEUP_STATUS_TIMER;
-    sleep_time = sleep_time_min * 60 * uS_TO_S_FACTOR;
+    status_wakeup_via_timer = 0;
+    sleep_time_remaining = sleep_time_remaining - ((startup_time - sleep_time_start) * uS_TO_S_FACTOR);
+#ifdef DEBUG
+    Serial.println("Wakeup via ext1 or touchpad calc time");
+    Serial.print("startup_time: ");
+    Serial.println(startup_time);
+    Serial.print("sleep_time_start: ");
+    Serial.println(sleep_time_start);
+    Serial.print("sleep_time_remaining: ");
+    Serial.println(sleep_time_remaining);
+#endif
   }
 
   display.init(0, false);
@@ -157,9 +167,9 @@ void setup() {
 
   display.fillScreen(GxEPD_WHITE);
 
-  display.fillCircle(130, 25, 5, GxEPD_BLACK);
-  display.fillCircle(130, 25, 2, GxEPD_WHITE);
-  display.setCursor(135, 50);
+  display.fillCircle(130, 30, 5, GxEPD_BLACK);
+  display.fillCircle(130, 30, 2, GxEPD_WHITE);
+  display.setCursor(135, 55);
   display.print("C");
 
   display.setCursor(130, 120);
@@ -173,6 +183,26 @@ void setup() {
   display.setCursor(90, 80);
   display.print("bootCount");
 #endif
+
+  // check if usb power is on or if battery is low
+  if (tp4056.has_usb_power()) {
+    if (tp4056.state() == tp4056.CHARGING) {
+      display.drawInvertedBitmap(170, 5, icon_battery_charing, 25, 43, GxEPD_BLACK);
+    }
+    if (tp4056.state() == tp4056.CHARGED) {
+      display.drawInvertedBitmap(170, 5, icon_battery_full, 25, 43, GxEPD_BLACK);
+    }
+  }
+  else {
+    // we have no USB power, so check batter voltage
+    if (battery_low > voltage_divider.get_voltage()) {
+      display.drawInvertedBitmap(170, 5, icon_battery_low, 25, 43, GxEPD_BLACK);
+    }
+    else {
+      // remove drawing
+      display.fillRect(170, 5, 25, 43, GxEPD_WHITE);
+    }
+  }
 
   if (bootCount == 0) {
     display.display();
@@ -206,10 +236,9 @@ void loop() {
   Serial.println("");
   mqtt_check_connection();
 
-  //float battery_voltage = get_battery_voltage();
-  float battery_voltage = 3.3;
+  float battery_voltage = voltage_divider.get_voltage();
 
-  if (wakeup_status == WAKEUP_STATUS_TIMER) {
+  if (status_wakeup_via_timer == 1) {
     client.publish(String("/temperature/" + hostname + "/state").c_str(), String(t, 2).c_str());
     client.publish(String("/humidity/" + hostname + "/state").c_str(), String(h, 2).c_str());
     client.publish(String("/pressure/" + hostname + "/state").c_str(), String(p, 2).c_str());
@@ -226,7 +255,7 @@ void loop() {
 #endif
 
   display.setFont(&FreeSansBold24pt7b);
-  display.setCursor(5, 50);
+  display.setCursor(5, 55);
   display.print(t, 1);
 
   display.setCursor(5, 120);
@@ -247,11 +276,10 @@ void loop() {
 
   esp_wifi_stop();
   adc_power_off();
-  esp_sleep_enable_timer_wakeup(sleep_time);
+  esp_sleep_enable_timer_wakeup(sleep_time_remaining);
+  sleep_time_start = time(0);
   esp_sleep_enable_touchpad_wakeup();
-  if (wakeup_status == WAKEUP_STATUS_TIMER) {
-    // only set current time if wakeup was called by periodic timer
-    gettimeofday(&sleep_enter_time, NULL);
-  }
+  //esp_sleep_enable_ext1_wakeup(WAKEUP_EXT1_GPIO_MASK, ESP_EXT1_WAKEUP_ANY_HIGH);
+
   esp_deep_sleep_start();
 }
