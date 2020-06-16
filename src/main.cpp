@@ -47,7 +47,7 @@
  *  TP4056 USB   = GPIO34
  *  
  *  Voltage Input  = GPIO 35 / ADC7
- *  ENABLE Voltage = GPIO 19 
+ *  ENABLE Voltage = GPIO 25
  */
 GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(5, 17, 16, 4));
 RTC_DATA_ATTR unsigned int bootCount = 0;
@@ -59,7 +59,7 @@ String hostname = String(HOSTNAME);
 TP4056 tp4056;
 VoltageDivider voltage_divider;
 const short pin_touch_pad = T9;
-const short pin_enable_voltage_divider = 19;
+const short pin_enable_voltage_divider = 25;
 const short pin_battery_adc = 35;
 const float volt_r1 = 10000.0;
 const float volt_r2 = 10000.0;
@@ -68,7 +68,7 @@ const short pin_tp4056_chrg = 36;
 const short pin_tp4056_stdby = 39;
 const short pin_tp4056_usb = 34;
 const float battery_low = 2.7;
-// 2^36 + 2^34 + 2^39
+// 2^36 + 2^34 + 2^39 FIXME
 #define WAKEUP_EXT1_GPIO_MASK 0x9400000000
 Adafruit_BME280 bme;
 short status_wakeup_via_timer = 0;
@@ -161,6 +161,8 @@ void setup() {
   }
 
   display.init(0, false);
+  //SPI.end();
+  //SPI.begin(18, 19, 23, 5);
   display.setRotation(2);
   display.setTextColor(GxEPD_BLACK);
   display.setFont(&FreeSans18pt7b);
