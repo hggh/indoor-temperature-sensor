@@ -102,6 +102,7 @@ void touch_interrupt() {
 }
 
 void setup() {
+  setCpuFrequencyMhz(80);
 #ifdef DEBUG
   Serial.begin(115200);
   Serial.println("Booting count: " + String(bootCount));
