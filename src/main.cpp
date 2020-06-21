@@ -48,6 +48,8 @@
  *  
  *  Voltage Input  = GPIO 35 / ADC7
  *  ENABLE Voltage = GPIO 25
+ *
+ *  LED            = GPIO 26
  */
 GxEPD2_BW<GxEPD2_154, GxEPD2_154::HEIGHT> display(GxEPD2_154(5, 17, 16, 4));
 RTC_DATA_ATTR unsigned int bootCount = 0;
@@ -61,6 +63,7 @@ VoltageDivider voltage_divider;
 const short pin_touch_pad = T9;
 const short pin_enable_voltage_divider = 25;
 const short pin_battery_adc = 35;
+const short pin_led = 26;
 const float volt_r1 = 10000.0;
 const float volt_r2 = 10000.0;
 const float voltage = 3.3;
@@ -110,6 +113,9 @@ void setup() {
   time_t startup_time = time(0);
   esp_bluedroid_disable();
   esp_bt_controller_disable();
+
+  pinMode(pin_led, OUTPUT);
+  digitalWrite(pin_led, LOW);
 
   adc_power_on();
   esp_wifi_start();
