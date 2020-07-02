@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name tps6303x)(type KiCad)(uri /home/jonas/entwicklung/kicad-libraries/tps6303x.pretty)(options "")(descr ""))
+  (lib (name coil)(type KiCad)(uri /home/jonas/entwicklung/kicad-libraries/coil.pretty)(options "")(descr ""))
+  (lib (name buck-boost-conn)(type KiCad)(uri /home/jonas/entwicklung/kicad-libraries/buck-boost-conn)(options "")(descr ""))
+)
