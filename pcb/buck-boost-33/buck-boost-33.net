@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jonas/entwicklung/indoor-temperature-sensor/pcb/buck-boost-33/buck-boost-33.sch)
-    (date "Fri 03 Jul 2020 11:32:24 AM CEST")
+    (date "Fri 03 Jul 2020 02:50:04 PM CEST")
     (tool "Eeschema 5.0.2+dfsg1-1~bpo9+1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -69,10 +69,8 @@
       (tstamp 5EF79359))
     (comp (ref L1)
       (value L)
-      (footprint coil:CoilMX-MS0420)
+      (footprint coil:Murata_1266AS-H-1R5N=P2)
       (datasheet ~)
-      (fields
-        (field (name LCSC) C380153))
       (libsource (lib Device) (part L) (description Inductor))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF79714))
