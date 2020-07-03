@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jonas/entwicklung/indoor-temperature-sensor/pcb/buck-boost-33/buck-boost-33.sch)
-    (date "Fri 03 Jul 2020 12:04:29 AM CEST")
+    (date "Fri 03 Jul 2020 11:32:24 AM CEST")
     (tool "Eeschema 5.0.2+dfsg1-1~bpo9+1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -19,6 +19,8 @@
       (value TPS63031DSKT)
       (footprint tps6303x:VSON-10-1EP_2.x2.5mm_P0.5mm_EP1.2x2mm)
       (datasheet http://www.ti.com/lit/ds/symlink/tps63031.pdf?HQS=TI-null-null-mousermode-df-pf-null-wwe&ts=1591517168701&ref_url=https://www.mouser.de/)
+      (fields
+        (field (name LCSC) C15516))
       (libsource (lib tps63031dskt) (part TPS63031DSKT) (description "High EfficiencySingleInductorBuck-BoostConverterWith 1-A Switches"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF78F5A))
@@ -26,6 +28,8 @@
       (value 100nF)
       (footprint Capacitor_SMD:C_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C386062))
       (libsource (lib Device) (part C_Small) (description "Unpolarized capacitor, small symbol"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF78FE0))
@@ -33,6 +37,8 @@
       (value 10uF)
       (footprint Capacitor_SMD:C_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C100083))
       (libsource (lib Device) (part C_Small) (description "Unpolarized capacitor, small symbol"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF791A9))
@@ -40,6 +46,8 @@
       (value 10uF)
       (footprint Capacitor_SMD:C_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C100083))
       (libsource (lib Device) (part C_Small) (description "Unpolarized capacitor, small symbol"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF79229))
@@ -47,6 +55,8 @@
       (value 10uF)
       (footprint Capacitor_SMD:C_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C100083))
       (libsource (lib Device) (part C_Small) (description "Unpolarized capacitor, small symbol"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF79259))
@@ -59,14 +69,18 @@
       (tstamp 5EF79359))
     (comp (ref L1)
       (value L)
-      (footprint coil:Murata_1266AS-H-1R5N=P2)
+      (footprint coil:CoilMX-MS0420)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C380153))
       (libsource (lib Device) (part L) (description Inductor))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EF79714))
     (comp (ref IC1)
       (value TP4056)
       (footprint Package_SO:SOIC-8_3.9x4.9mm_P1.27mm)
+      (fields
+        (field (name LCSC) C16581))
       (libsource (lib tp4056) (part TP4056) (description "LiPo charger"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EFB97C9))
@@ -74,6 +88,8 @@
       (value 3k)
       (footprint Resistor_SMD:R_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C17661))
       (libsource (lib Device) (part R) (description Resistor))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EFBA253))
@@ -81,6 +97,8 @@
       (value 10uF)
       (footprint Capacitor_SMD:C_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C100083))
       (libsource (lib Device) (part C_Small) (description "Unpolarized capacitor, small symbol"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EFBAD6B))
@@ -88,6 +106,8 @@
       (value 10uF)
       (footprint Capacitor_SMD:C_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C100083))
       (libsource (lib Device) (part C_Small) (description "Unpolarized capacitor, small symbol"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EFBAE2A))
@@ -95,6 +115,8 @@
       (value 0.4)
       (footprint Resistor_SMD:R_0805_2012Metric)
       (datasheet ~)
+      (fields
+        (field (name LCSC) C253349))
       (libsource (lib Device) (part R) (description Resistor))
       (sheetpath (names /) (tstamps /))
       (tstamp 5EFBB573))
