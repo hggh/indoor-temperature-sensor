@@ -2,7 +2,7 @@
 <export version="D">
   <design>
     <source>/home/jonas/entwicklung/indoor-temperature-sensor/pcb/buck-boost-33/buck-boost-33.sch</source>
-    <date>Thu 02 Jul 2020 11:10:34 PM CEST</date>
+    <date>Fri 03 Jul 2020 01:31:00 PM CEST</date>
     <tool>Eeschema 5.0.2+dfsg1-1~bpo9+1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -23,6 +23,9 @@
       <value>TPS63031DSKT</value>
       <footprint>tps6303x:VSON-10-1EP_2.x2.5mm_P0.5mm_EP1.2x2mm</footprint>
       <datasheet>http://www.ti.com/lit/ds/symlink/tps63031.pdf?HQS=TI-null-null-mousermode-df-pf-null-wwe&amp;ts=1591517168701&amp;ref_url=https://www.mouser.de/</datasheet>
+      <fields>
+        <field name="LCSC">C15516</field>
+      </fields>
       <libsource lib="tps63031dskt" part="TPS63031DSKT" description="High EfficiencySingleInductorBuck-BoostConverterWith 1-A Switches"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EF78F5A</tstamp>
@@ -31,6 +34,9 @@
       <value>100nF</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C386062</field>
+      </fields>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EF78FE0</tstamp>
@@ -39,6 +45,9 @@
       <value>10uF</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EF791A9</tstamp>
@@ -47,6 +56,9 @@
       <value>10uF</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EF79229</tstamp>
@@ -55,6 +67,9 @@
       <value>10uF</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EF79259</tstamp>
@@ -69,8 +84,11 @@
     </comp>
     <comp ref="L1">
       <value>L</value>
-      <footprint>coil:Murata 1266AS-H-1R5N=P2</footprint>
+      <footprint>coil:CoilMX-MS0420</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C380153</field>
+      </fields>
       <libsource lib="Device" part="L" description="Inductor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EF79714</tstamp>
@@ -78,6 +96,9 @@
     <comp ref="IC1">
       <value>TP4056</value>
       <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <fields>
+        <field name="LCSC">C16581</field>
+      </fields>
       <libsource lib="tp4056" part="TP4056" description="LiPo charger"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EFB97C9</tstamp>
@@ -86,6 +107,9 @@
       <value>3k</value>
       <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C17661</field>
+      </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EFBA253</tstamp>
@@ -94,6 +118,9 @@
       <value>10uF</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EFBAD6B</tstamp>
@@ -102,6 +129,9 @@
       <value>10uF</value>
       <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
       <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EFBAE2A</tstamp>
@@ -110,6 +140,9 @@
       <value>0.4</value>
       <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
       <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C253349</field>
+      </fields>
       <libsource lib="Device" part="R" description="Resistor"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5EFBB573</tstamp>
@@ -291,15 +324,15 @@
       <node ref="J2" pin="1"/>
       <node ref="J3" pin="1"/>
       <node ref="IC1" pin="3"/>
-      <node ref="C1" pin="2"/>
       <node ref="IC1" pin="1"/>
       <node ref="C2" pin="1"/>
-      <node ref="C5" pin="2"/>
       <node ref="R2" pin="2"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C1" pin="2"/>
     </net>
     <net code="2" name="Net-(C1-Pad1)">
-      <node ref="IC1" pin="8"/>
       <node ref="IC1" pin="4"/>
+      <node ref="IC1" pin="8"/>
       <node ref="C1" pin="1"/>
       <node ref="R1" pin="2"/>
     </net>
@@ -309,45 +342,45 @@
       <node ref="J2" pin="6"/>
     </net>
     <net code="4" name="Net-(IC1-Pad2)">
-      <node ref="IC1" pin="2"/>
       <node ref="R2" pin="1"/>
+      <node ref="IC1" pin="2"/>
     </net>
     <net code="5" name="BATT">
-      <node ref="J1" pin="1"/>
       <node ref="J2" pin="3"/>
-      <node ref="U1" pin="5"/>
-      <node ref="IC1" pin="5"/>
-      <node ref="C2" pin="2"/>
       <node ref="C5" pin="1"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="U1" pin="5"/>
+      <node ref="J1" pin="1"/>
+      <node ref="C2" pin="2"/>
     </net>
-    <net code="6" name="CHRG">
-      <node ref="IC1" pin="7"/>
-      <node ref="J2" pin="4"/>
-    </net>
-    <net code="7" name="STDBY">
+    <net code="6" name="STDBY">
       <node ref="IC1" pin="6"/>
       <node ref="J2" pin="5"/>
+    </net>
+    <net code="7" name="CHRG">
+      <node ref="IC1" pin="7"/>
+      <node ref="J2" pin="4"/>
     </net>
     <net code="8" name="Net-(L1-Pad1)">
       <node ref="L1" pin="1"/>
       <node ref="U1" pin="4"/>
     </net>
     <net code="9" name="Net-(L1-Pad2)">
-      <node ref="L1" pin="2"/>
       <node ref="U1" pin="2"/>
+      <node ref="L1" pin="2"/>
     </net>
     <net code="10" name="Net-(C3-Pad2)">
-      <node ref="U1" pin="6"/>
+      <node ref="C3" pin="2"/>
       <node ref="U1" pin="8"/>
       <node ref="U1" pin="7"/>
-      <node ref="C3" pin="2"/>
+      <node ref="U1" pin="6"/>
     </net>
-    <net code="11" name="Net-(C4-Pad2)">
-      <node ref="J2" pin="2"/>
-      <node ref="U1" pin="1"/>
-      <node ref="C6" pin="2"/>
-      <node ref="U1" pin="10"/>
+    <net code="11" name="/3.3V">
       <node ref="C4" pin="2"/>
+      <node ref="J2" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="U1" pin="1"/>
+      <node ref="U1" pin="10"/>
     </net>
   </nets>
 </export>
