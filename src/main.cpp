@@ -15,8 +15,7 @@
 
 #include <Wire.h>
 #include <SPI.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
+#include "SparkFunBME280.h"
 
 #include <Fonts/FreeSans18pt7b.h>
 #include <Fonts/FreeSerif12pt7b.h>
@@ -73,7 +72,7 @@ const short pin_tp4056_usb = 34;
 const float battery_low = 2.7;
 // 2^36 + 2^34 + 2^39 FIXME
 #define WAKEUP_EXT1_GPIO_MASK 0x9400000000
-Adafruit_BME280 bme;
+BME280 bme;
 short status_wakeup_via_timer = 0;
 
 int get_wakeup_reason() {
@@ -134,14 +133,15 @@ void setup() {
 
   client.setServer(MQTT_SERVER, 1883);
 
-  unsigned status = bme.begin(0x76, &Wire);
+  Wire.begin();
+  bme.setI2CAddress(0x76);
+  bool status = bme.beginI2C();
 #ifdef DEBUG
   if (!status) {
     Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!");
-    Serial.print("SensorID was: 0x");
-    Serial.println(bme.sensorID(),16);
   }
 #endif
+  bme.setMode(MODE_FORCED);
 
   // if wakeup was by timer or after reset set time to sleep and send data via mqtt
   if (get_wakeup_reason() == ESP_SLEEP_WAKEUP_TIMER || get_wakeup_reason() == 0) {
@@ -226,9 +226,9 @@ void setup() {
 }
 
 void loop() {
-  float h = bme.readHumidity();
-  float t = bme.readTemperature();
-  float p = bme.readPressure() / 100.0F;
+  float h = bme.readFloatHumidity();
+  float t = bme.readTempC();
+  float p = bme.readFloatPressure() / 100.0F;
 #ifdef DEBUG
   Serial.print("bme.readHumidity: ");
   Serial.println(h);
@@ -285,6 +285,7 @@ void loop() {
 
   esp_wifi_stop();
   adc_power_off();
+  bme.setMode(MODE_SLEEP);
   esp_sleep_enable_timer_wakeup(sleep_time_remaining);
   sleep_time_start = time(0);
   esp_sleep_enable_touchpad_wakeup();
