@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jonas/entwicklung/indoor-temperature-sensor/pcb/ldo-30/ldo-30.sch)
-    (date "Tue 21 Jul 2020 09:42:15 PM CEST")
+    (date "Thu 23 Jul 2020 10:16:27 PM CEST")
     (tool "Eeschema 5.0.2+dfsg1-1~bpo9+1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -99,7 +99,7 @@
       (tstamp 5EFD7AF9))
     (comp (ref U1)
       (value XC6220)
-      (footprint Package_TO_SOT_SMD:SOT-23-5)
+      (footprint xc6220:XC6220)
       (libsource (lib xc6220) (part XC6220) (description "XC6220 SOT-25-5"))
       (sheetpath (names /) (tstamps /))
       (tstamp 5F1728EC)))
