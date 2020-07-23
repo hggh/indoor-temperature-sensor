@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/jonas/entwicklung/indoor-temperature-sensor/pcb/buck-boost-33/buck-boost-33.sch</source>
+    <date>Fri 03 Jul 2020 01:31:00 PM CEST</date>
+    <tool>Eeschema 5.0.2+dfsg1-1~bpo9+1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>buck-boost-33.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="U1">
+      <value>TPS63031DSKT</value>
+      <footprint>tps6303x:VSON-10-1EP_2.x2.5mm_P0.5mm_EP1.2x2mm</footprint>
+      <datasheet>http://www.ti.com/lit/ds/symlink/tps63031.pdf?HQS=TI-null-null-mousermode-df-pf-null-wwe&amp;ts=1591517168701&amp;ref_url=https://www.mouser.de/</datasheet>
+      <fields>
+        <field name="LCSC">C15516</field>
+      </fields>
+      <libsource lib="tps63031dskt" part="TPS63031DSKT" description="High EfficiencySingleInductorBuck-BoostConverterWith 1-A Switches"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF78F5A</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C386062</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF78FE0</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF791A9</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF79229</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF79259</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>BATT</value>
+      <footprint>Connector_JST:JST_PH_S2B-PH-K_1x02_P2.00mm_Horizontal</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector" part="Conn_01x02_Male" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF79359</tstamp>
+    </comp>
+    <comp ref="L1">
+      <value>L</value>
+      <footprint>coil:CoilMX-MS0420</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C380153</field>
+      </fields>
+      <libsource lib="Device" part="L" description="Inductor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EF79714</tstamp>
+    </comp>
+    <comp ref="IC1">
+      <value>TP4056</value>
+      <footprint>Package_SO:SOIC-8_3.9x4.9mm_P1.27mm</footprint>
+      <fields>
+        <field name="LCSC">C16581</field>
+      </fields>
+      <libsource lib="tp4056" part="TP4056" description="LiPo charger"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFB97C9</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>3k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C17661</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFBA253</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFBAD6B</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C100083</field>
+      </fields>
+      <libsource lib="Device" part="C_Small" description="Unpolarized capacitor, small symbol"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFBAE2A</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>0.4</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <datasheet>~</datasheet>
+      <fields>
+        <field name="LCSC">C253349</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFBB573</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>buck-boost-conn</value>
+      <footprint>buck-boost-conn:buck-boost-conn</footprint>
+      <libsource lib="lipo-buck-boost-conn" part="buck-boost-conn" description="Buck Boost inter pcb connection"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFCC7EB</tstamp>
+    </comp>
+    <comp ref="J3">
+      <value>PWR</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <datasheet>~</datasheet>
+      <libsource lib="Connector" part="Conn_01x02_Female" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5EFD7AF9</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector" part="Conn_01x02_Female">
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x02_Female</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector" part="Conn_01x02_Male">
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x02_Male</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C_Small">
+      <description>Unpolarized capacitor, small symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="L">
+      <description>Inductor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Choke_*</fp>
+        <fp>*Coil*</fp>
+        <fp>Inductor_*</fp>
+        <fp>L_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="lipo-buck-boost-conn" part="buck-boost-conn">
+      <description>Buck Boost inter pcb connection</description>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">buck-boost-conn</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="input"/>
+        <pin num="2" name="3.3V" type="input"/>
+        <pin num="3" name="BATT" type="input"/>
+        <pin num="4" name="TP_CHRG" type="input"/>
+        <pin num="5" name="TP_STDBY" type="input"/>
+        <pin num="6" name="5V" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="tp4056" part="TP4056">
+      <description>LiPo charger</description>
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">TP4056</field>
+        <field name="Footprint">Package_SO:SSOP-8_3.9x5.05mm_P1.27mm</field>
+      </fields>
+      <pins>
+        <pin num="1" name="TEMP" type="input"/>
+        <pin num="2" name="PROG" type="input"/>
+        <pin num="3" name="GND" type="input"/>
+        <pin num="4" name="VCC" type="input"/>
+        <pin num="5" name="BAT" type="input"/>
+        <pin num="6" name="STDBY" type="input"/>
+        <pin num="7" name="CHRG" type="input"/>
+        <pin num="8" name="CE" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="tps63031dskt" part="TPS63031DSKT">
+      <description>High EfficiencySingleInductorBuck-BoostConverterWith 1-A Switches</description>
+      <docs>http://www.ti.com/lit/ds/symlink/tps63031.pdf?HQS=TI-null-null-mousermode-df-pf-null-wwe&amp;ts=1591517168701&amp;ref_url=https://www.mouser.de/</docs>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TPS63031DSKT</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VOUT" type="output"/>
+        <pin num="2" name="L2" type="input"/>
+        <pin num="3" name="PGND" type="input"/>
+        <pin num="4" name="L1" type="input"/>
+        <pin num="5" name="VIN" type="power_in"/>
+        <pin num="6" name="EN" type="input"/>
+        <pin num="7" name="PS/SYNC" type="input"/>
+        <pin num="8" name="VINA" type="input"/>
+        <pin num="9" name="GND" type="input"/>
+        <pin num="10" name="FB" type="input"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector">
+      <uri>/usr/share/kicad/library/Connector.lib</uri>
+    </library>
+    <library logical="Device">
+      <uri>/usr/share/kicad/library/Device.lib</uri>
+    </library>
+    <library logical="lipo-buck-boost-conn">
+      <uri>/home/jonas/entwicklung/kicad-libraries/lipo-buck-boost-conn.lib</uri>
+    </library>
+    <library logical="tp4056">
+      <uri>/home/jonas/entwicklung/kicad-libraries/tp4056.lib</uri>
+    </library>
+    <library logical="tps63031dskt">
+      <uri>/home/jonas/entwicklung/kicad-libraries/tps63031dskt.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="C4" pin="1"/>
+      <node ref="U1" pin="9"/>
+      <node ref="U1" pin="3"/>
+      <node ref="C3" pin="1"/>
+      <node ref="J1" pin="2"/>
+      <node ref="C6" pin="1"/>
+      <node ref="J2" pin="1"/>
+      <node ref="J3" pin="1"/>
+      <node ref="IC1" pin="3"/>
+      <node ref="IC1" pin="1"/>
+      <node ref="C2" pin="1"/>
+      <node ref="R2" pin="2"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C1" pin="2"/>
+    </net>
+    <net code="2" name="Net-(C1-Pad1)">
+      <node ref="IC1" pin="4"/>
+      <node ref="IC1" pin="8"/>
+      <node ref="C1" pin="1"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="3" name="+5V">
+      <node ref="J3" pin="2"/>
+      <node ref="R1" pin="1"/>
+      <node ref="J2" pin="6"/>
+    </net>
+    <net code="4" name="Net-(IC1-Pad2)">
+      <node ref="R2" pin="1"/>
+      <node ref="IC1" pin="2"/>
+    </net>
+    <net code="5" name="BATT">
+      <node ref="J2" pin="3"/>
+      <node ref="C5" pin="1"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="U1" pin="5"/>
+      <node ref="J1" pin="1"/>
+      <node ref="C2" pin="2"/>
+    </net>
+    <net code="6" name="STDBY">
+      <node ref="IC1" pin="6"/>
+      <node ref="J2" pin="5"/>
+    </net>
+    <net code="7" name="CHRG">
+      <node ref="IC1" pin="7"/>
+      <node ref="J2" pin="4"/>
+    </net>
+    <net code="8" name="Net-(L1-Pad1)">
+      <node ref="L1" pin="1"/>
+      <node ref="U1" pin="4"/>
+    </net>
+    <net code="9" name="Net-(L1-Pad2)">
+      <node ref="U1" pin="2"/>
+      <node ref="L1" pin="2"/>
+    </net>
+    <net code="10" name="Net-(C3-Pad2)">
+      <node ref="C3" pin="2"/>
+      <node ref="U1" pin="8"/>
+      <node ref="U1" pin="7"/>
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="11" name="/3.3V">
+      <node ref="C4" pin="2"/>
+      <node ref="J2" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="U1" pin="1"/>
+      <node ref="U1" pin="10"/>
+    </net>
+  </nets>
+</export>
