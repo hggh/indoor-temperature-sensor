@@ -4,4 +4,6 @@
   * BME280
   * 1.54" w/b epaper
   
+## TODO
 
+  * use PNP to disconnect epaper from VCC, will save ~30 µA
